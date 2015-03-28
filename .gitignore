@@ -1,0 +1,12 @@
+# Apple
+
+.DS_Store
+
+# IntelliJ
+
+.idea
+*.iml
+
+# Java
+
+target
