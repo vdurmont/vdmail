@@ -5,6 +5,7 @@ import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import com.microtripit.mandrillapp.lutung.view.MandrillMessage;
 import com.vdurmont.vdmail.dto.Email;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
+import com.vdurmont.vdmail.model.User;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -30,11 +31,11 @@ public class MandrillProvider implements MailProvider {
         }
     }
 
-    @Override public void send(Email email) throws UnavailableProviderException {
+    @Override public void send(User user, Email email) throws UnavailableProviderException {
         if (this.mandrillApi == null) {
             throw new UnavailableProviderException("Mandrill was not properly configured.");
         }
-        MandrillMessage message = toMandrillMessage(email);
+        MandrillMessage message = toMandrillMessage(user, email);
         try {
             this.mandrillApi.messages().send(message, true);
         } catch (MandrillApiError | IOException e) {
@@ -43,7 +44,7 @@ public class MandrillProvider implements MailProvider {
         }
     }
 
-    private static MandrillMessage toMandrillMessage(Email email) {
+    private static MandrillMessage toMandrillMessage(User user, Email email) {
         // TODO code me
         return null;
     }
