@@ -13,4 +13,8 @@ public class ConsoleMailProvider implements MailProvider {
     @Override public void send(User user, Email email) throws UnavailableProviderException {
         LOGGER.debug("ConsoleMailService sending email from User#" + user + ": " + email);
     }
+
+    @Override public boolean isEnabled() {
+        return true;
+    }
 }

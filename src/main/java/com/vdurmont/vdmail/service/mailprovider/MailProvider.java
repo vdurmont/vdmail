@@ -14,4 +14,11 @@ public interface MailProvider {
      * @throws UnavailableProviderException if the provider is not configured or unavailable at the moment.
      */
     void send(User user, Email email) throws UnavailableProviderException;
+
+    /**
+     * Checks if a provider is enabled in the app configuration.
+     *
+     * @return false if disabled, true if enabled
+     */
+    boolean isEnabled();
 }

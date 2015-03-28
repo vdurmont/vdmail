@@ -1,6 +1,7 @@
 package com.vdurmont.vdmail;
 
 import com.vdurmont.vdmail.dto.Email;
+import com.vdurmont.vdmail.model.User;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
@@ -24,5 +25,12 @@ public abstract class AbstractTest {
         email.setToName(randomString());
         email.setContent(randomString());
         return email;
+    }
+
+    protected static User generateUser() {
+        User user = new User();
+        user.setName(randomString());
+        user.setAddress(randomEmail());
+        return user;
     }
 }
