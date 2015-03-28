@@ -8,6 +8,8 @@ Demo project: webservice that provides an abstraction between mail providers.
 
 ## Local Installation
 
+You have to provide a few configuration variables. Copy the `vdmail.sample.properties` file to `src/main/resources/vdmail.properties` and edit it with your own information.
+
 ```
 mvn clean install
 foreman start web

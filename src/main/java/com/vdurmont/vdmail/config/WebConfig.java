@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Configuration
 @ComponentScan(basePackages = "com.vdurmont.vdmail.controller")
-@Import({AppConfig.class, DatabaseConfig.class})
+@Import(AppConfig.class)
 @EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
     @Override

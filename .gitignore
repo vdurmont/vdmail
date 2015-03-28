@@ -10,3 +10,6 @@
 # Java
 
 target
+
+
+src/main/resources/vdmail.properties
