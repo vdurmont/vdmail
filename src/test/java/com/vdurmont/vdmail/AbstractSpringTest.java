@@ -1,8 +1,10 @@
 package com.vdurmont.vdmail;
 
 import com.vdurmont.vdmail.config.AppConfig;
+import com.vdurmont.vdmail.model.Email;
 import com.vdurmont.vdmail.model.User;
 import com.vdurmont.vdmail.repository.EmailRepository;
+import com.vdurmont.vdmail.repository.SessionRepository;
 import com.vdurmont.vdmail.repository.UserRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -17,6 +19,7 @@ import javax.inject.Inject;
 @ContextConfiguration(classes = AppConfig.class)
 public abstract class AbstractSpringTest extends AbstractTest {
     @Inject private EmailRepository emailRepository;
+    @Inject private SessionRepository sessionRepository;
     @Inject private UserRepository userRepository;
 
     @Before public void setUpSpringTest() {
@@ -25,11 +28,21 @@ public abstract class AbstractSpringTest extends AbstractTest {
 
     @After
     public void tearDownSpringTest() {
-        this.emailRepository.deleteAll();
-        this.userRepository.deleteAll();
+        this.emailRepository.deleteAllInBatch();
+        this.sessionRepository.deleteAllInBatch();
+        this.userRepository.deleteAllInBatch();
     }
 
     protected User createUser() {
         return this.userRepository.save(generateUser());
+    }
+
+    protected Email createEmail(User sender, User recipient) {
+        Email email = new Email();
+        email.setSender(sender);
+        email.setRecipient(recipient);
+        email.setSubject(randomString());
+        email.setContent(randomString());
+        return this.emailRepository.save(email);
     }
 }

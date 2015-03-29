@@ -1,5 +1,7 @@
 package com.vdurmont.vdmail.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;

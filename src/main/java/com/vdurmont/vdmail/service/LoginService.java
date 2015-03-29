@@ -1,5 +1,6 @@
 package com.vdurmont.vdmail.service;
 
+import com.vdurmont.vdmail.exception.ForbiddenException;
 import com.vdurmont.vdmail.exception.NoConnectedUserException;
 import com.vdurmont.vdmail.filter.TokenFilter;
 import com.vdurmont.vdmail.model.User;
@@ -25,5 +26,12 @@ public class LoginService {
             throw new NoConnectedUserException();
         }
         return user;
+    }
+
+    public void assertHasRightOn(User user) {
+        User current = this.getRequiredCurrentUser();
+        if (!current.getId().equals(user.getId())) {
+            throw new ForbiddenException();
+        }
     }
 }
