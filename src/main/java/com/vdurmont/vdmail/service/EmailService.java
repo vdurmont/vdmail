@@ -1,5 +1,6 @@
 package com.vdurmont.vdmail.service;
 
+import com.vdurmont.vdmail.dto.HttpStatus;
 import com.vdurmont.vdmail.exception.IllegalInputException;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.exception.VDMailException;
@@ -107,7 +108,7 @@ public class EmailService {
         if (!sent) {
             // We didn't find any available provider
             // TODO maybe we could try to start again at the begining of the list?
-            throw new VDMailException("No mail provider available.");
+            throw new VDMailException(HttpStatus.INTERNAL_SERVER_ERROR, "No mail provider available.");
         }
     }
 }

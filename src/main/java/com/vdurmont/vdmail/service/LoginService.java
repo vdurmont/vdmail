@@ -1,14 +1,22 @@
 package com.vdurmont.vdmail.service;
 
 import com.vdurmont.vdmail.exception.NoConnectedUserException;
+import com.vdurmont.vdmail.filter.TokenFilter;
 import com.vdurmont.vdmail.model.User;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LoginService {
     public User getCurrentUser() {
-        // TODO code me
-        return null;
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        TokenFilter.VDMailAuthentication auth = (TokenFilter.VDMailAuthentication) securityContext.getAuthentication();
+        if (auth == null || auth.getPrincipal() instanceof String) {
+            return null;
+        } else {
+            return (User) auth.getPrincipal();
+        }
     }
 
     public User getRequiredCurrentUser() {

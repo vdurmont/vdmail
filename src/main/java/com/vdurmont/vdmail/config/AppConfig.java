@@ -12,6 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:vdmail.properties")
 @Import(DatabaseConfig.class)
 @ComponentScan(basePackages = {
+        "com.vdurmont.vdmail.exception",
         "com.vdurmont.vdmail.mapper",
         "com.vdurmont.vdmail.service"
 })
