@@ -1,8 +1,8 @@
 package com.vdurmont.vdmail.tools;
 
 import com.vdurmont.vdmail.AbstractSimpleTest;
-import com.vdurmont.vdmail.dto.Email;
 import com.vdurmont.vdmail.exception.IllegalInputException;
+import com.vdurmont.vdmail.model.Email;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -14,9 +14,9 @@ public class EmailsTest extends AbstractSimpleTest {
         assertEquals(0, Emails.validate(email).size());
     }
 
-    @Test public void validate_without_toName_returns_no_error() {
+    @Test public void validate_without_senderName_returns_no_error() {
         Email email = generateValidEmail();
-        email.setToName(null);
+        email.getSender().setName(null);
         assertEquals(0, Emails.validate(email).size());
     }
 
@@ -25,20 +25,32 @@ public class EmailsTest extends AbstractSimpleTest {
         Emails.validate(null);
     }
 
-    @Test public void validate_without_toAddress_returns_an_error() {
+    @Test public void validate_without_sender_returns_an_error() {
         Email email = generateValidEmail();
-        email.setToAddress(null);
-        assertTrue(Emails.validate(email).contains("toAddress"));
+        email.setSender(null);
+        assertTrue(Emails.validate(email).contains("sender"));
     }
 
-    @Test public void validate_with_invalid_toAddress_returns_an_error() {
+    @Test public void validate_without_senderAddress_returns_an_error() {
+        Email email = generateValidEmail();
+        email.getSender().setAddress(null);
+        assertTrue(Emails.validate(email).contains("sender_address"));
+    }
+
+    @Test public void validate_without_recipient_returns_an_error() {
+        Email email = generateValidEmail();
+        email.setRecipient(null);
+        assertTrue(Emails.validate(email).contains("recipient"));
+    }
+
+    @Test public void validate_with_invalid_recipientAddress_returns_an_error() {
         Email email = generateValidEmail();
 
-        email.setToAddress("");
-        assertTrue(Emails.validate(email).contains("toAddress"));
+        email.getRecipient().setAddress("");
+        assertTrue(Emails.validate(email).contains("recipient_address"));
 
-        email.setToAddress(randomString());
-        assertTrue(Emails.validate(email).contains("toAddress"));
+        email.getRecipient().setAddress(randomString());
+        assertTrue(Emails.validate(email).contains("recipient_address"));
     }
 
     @Test public void validate_without_subject_returns_an_error() {

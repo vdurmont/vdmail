@@ -1,7 +1,7 @@
 package com.vdurmont.vdmail.tools;
 
-import com.vdurmont.vdmail.dto.Email;
 import com.vdurmont.vdmail.exception.IllegalInputException;
+import com.vdurmont.vdmail.model.Email;
 import org.apache.commons.validator.routines.EmailValidator;
 
 import java.util.ArrayList;
@@ -18,10 +18,32 @@ public class Emails {
         if (email == null) {
             throw new IllegalInputException("Null email");
         } else {
-            if (isNullOrEmpty(email.getContent())) errorFields.add("content");
-            if (isNullOrEmpty(email.getSubject())) errorFields.add("subject");
-            if (!EmailValidator.getInstance().isValid(email.getToAddress())) errorFields.add("toAddress");
+            if (email.getSender() == null) {
+                errorFields.add("sender");
+            } else if (isNullOrEmpty(email.getSender().getAddress()) ||
+                    !EmailValidator.getInstance().isValid(email.getSender().getAddress())) {
+                errorFields.add("sender_address");
+            }
+            if (email.getRecipient() == null) {
+                errorFields.add("recipient");
+            } else if (isNullOrEmpty(email.getRecipient().getAddress()) ||
+                    !EmailValidator.getInstance().isValid(email.getRecipient().getAddress())) {
+                errorFields.add("recipient_address");
+            }
+            if (isNullOrEmpty(email.getContent())) {
+                errorFields.add("content");
+            }
+            if (isNullOrEmpty(email.getSubject())) {
+                errorFields.add("subject");
+            }
         }
         return errorFields;
+    }
+
+    public static String clean(String address) {
+        if (isNullOrEmpty(address) || !EmailValidator.getInstance().isValid(address)) {
+            throw new IllegalInputException("Invalid address: " + address);
+        }
+        return address.trim();
     }
 }

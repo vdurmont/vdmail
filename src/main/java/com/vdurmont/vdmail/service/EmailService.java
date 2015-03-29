@@ -1,10 +1,11 @@
 package com.vdurmont.vdmail.service;
 
-import com.vdurmont.vdmail.dto.Email;
 import com.vdurmont.vdmail.exception.IllegalInputException;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.exception.VDMailException;
+import com.vdurmont.vdmail.model.Email;
 import com.vdurmont.vdmail.model.User;
+import com.vdurmont.vdmail.repository.EmailRepository;
 import com.vdurmont.vdmail.service.mailprovider.ConsoleMailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MandrillProvider;
@@ -20,8 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MailService {
+public class EmailService {
     private static final Duration DELAY = Duration.standardMinutes(1);
+
+    @Inject private EmailRepository emailRepository;
 
     @Inject private ConsoleMailProvider consoleMailProvider;
     @Inject private MandrillProvider mandrillProvider;
@@ -55,10 +58,20 @@ public class MailService {
     /**
      * Sends an email.
      *
-     * @param user  the sender
-     * @param email the email to send
+     * @param sender    the sender
+     * @param recipient the recipient
+     * @param subject   the subject of the mail
+     * @param content   the content of the mail
      */
-    public void send(User user, Email email) {
+    public Email send(User sender, User recipient, String subject, String content) {
+        // Build the email
+        Email email = new Email();
+        email.setSender(sender);
+        email.setRecipient(recipient);
+        email.setSubject(subject);
+        email.setContent(content);
+
+        // Check that it's valid
         List<String> errors = Emails.validate(email);
         if (errors.size() > 0) {
             throw new IllegalInputException("Invalid email (invalid fields: " + errors + ")");
@@ -70,15 +83,17 @@ public class MailService {
             this.providerIndex = 0;
         }
 
-        this.doSendEmail(user, email);
+        this.doSendEmail(email);
+
+        return this.emailRepository.save(email);
     }
 
-    private void doSendEmail(User user, Email email) {
+    private void doSendEmail(Email email) {
         boolean sent = false;
         while (!sent && this.providerIndex < this.providers.size()) {
             try {
                 MailProvider provider = this.providers.get(this.providerIndex);
-                provider.send(user, email);
+                provider.send(email);
                 sent = true;
             } catch (UnavailableProviderException e) {
                 // If the provider failed to send the message, we skip it for the next few minutes

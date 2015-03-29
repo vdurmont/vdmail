@@ -1,9 +1,8 @@
 package com.vdurmont.vdmail.service.mailprovider;
 
 import com.sendgrid.SendGrid;
-import com.vdurmont.vdmail.dto.Email;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
-import com.vdurmont.vdmail.model.User;
+import com.vdurmont.vdmail.model.Email;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,7 @@ public class SendgridProvider implements MailProvider {
         }
     }
 
-    @Override public void send(User user, Email email) throws UnavailableProviderException {
+    @Override public void send(Email email) throws UnavailableProviderException {
         if (this.sendGrid == null) {
             throw new UnavailableProviderException("Sendgrid was not properly configured.");
         }

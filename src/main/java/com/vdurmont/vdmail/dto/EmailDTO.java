@@ -1,25 +1,25 @@
 package com.vdurmont.vdmail.dto;
 
-public class Email {
-    private String toName;
-    private String toAddress;
+public class EmailDTO extends EntityDTO {
+    private UserDTO sender;
+    private UserDTO recipient;
     private String subject;
     private String content;
 
-    public String getToName() {
-        return toName;
+    public UserDTO getSender() {
+        return sender;
     }
 
-    public void setToName(String toName) {
-        this.toName = toName;
+    public void setSender(UserDTO sender) {
+        this.sender = sender;
     }
 
-    public String getToAddress() {
-        return toAddress;
+    public UserDTO getRecipient() {
+        return recipient;
     }
 
-    public void setToAddress(String toAddress) {
-        this.toAddress = toAddress;
+    public void setRecipient(UserDTO recipient) {
+        this.recipient = recipient;
     }
 
     public String getSubject() {

@@ -3,8 +3,8 @@ package com.vdurmont.vdmail.service.mailprovider;
 import com.microtripit.mandrillapp.lutung.MandrillApi;
 import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import com.microtripit.mandrillapp.lutung.view.MandrillMessage;
-import com.vdurmont.vdmail.dto.Email;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
+import com.vdurmont.vdmail.model.Email;
 import com.vdurmont.vdmail.model.User;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
@@ -34,11 +34,11 @@ public class MandrillProvider implements MailProvider {
         }
     }
 
-    @Override public void send(User user, Email email) throws UnavailableProviderException {
+    @Override public void send(Email email) throws UnavailableProviderException {
         if (this.mandrillApi == null) {
             throw new UnavailableProviderException("Mandrill was not properly configured.");
         }
-        MandrillMessage message = toMandrillMessage(user, email);
+        MandrillMessage message = toMandrillMessage(email);
         try {
             this.mandrillApi.messages().send(message, true);
         } catch (MandrillApiError | IOException e) {
@@ -47,22 +47,22 @@ public class MandrillProvider implements MailProvider {
         }
     }
 
-    protected static MandrillMessage toMandrillMessage(User user, Email email) {
+    protected static MandrillMessage toMandrillMessage(Email email) {
         MandrillMessage message = new MandrillMessage();
-        message.setFromName(user.getName());
-        message.setFromEmail(user.getAddress());
+        message.setFromName(email.getSender().getName());
+        message.setFromEmail(email.getSender().getAddress());
         ArrayList<MandrillMessage.Recipient> recipients = new ArrayList<>();
-        recipients.add(createMandrillRecipient(email.getToName(), email.getToAddress(), Recipient.Type.TO));
+        recipients.add(createMandrillRecipient(email.getRecipient(), Recipient.Type.TO));
         message.setTo(recipients);
         message.setSubject(email.getSubject());
         message.setText(email.getContent());
         return message;
     }
 
-    private static Recipient createMandrillRecipient(String name, String email, Recipient.Type type) {
+    private static Recipient createMandrillRecipient(User user, Recipient.Type type) {
         Recipient recipient = new Recipient();
-        recipient.setName(name);
-        recipient.setEmail(email);
+        recipient.setName(user.getName());
+        recipient.setEmail(user.getAddress());
         recipient.setType(type);
         return recipient;
     }

@@ -11,7 +11,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("admin")
 public class AdminController {
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "status", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, String> getStatus() {
         Map<String, String> map = new HashMap<>();

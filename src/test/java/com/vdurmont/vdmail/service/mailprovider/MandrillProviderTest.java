@@ -2,8 +2,7 @@ package com.vdurmont.vdmail.service.mailprovider;
 
 import com.microtripit.mandrillapp.lutung.view.MandrillMessage;
 import com.vdurmont.vdmail.AbstractSpringTest;
-import com.vdurmont.vdmail.dto.Email;
-import com.vdurmont.vdmail.model.User;
+import com.vdurmont.vdmail.model.Email;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -41,23 +40,22 @@ public class MandrillProviderTest extends AbstractSpringTest {
 
     @Test public void toMandrillMessage_converts_the_email() {
         // GIVEN
-        User user = generateUser();
         Email email = generateValidEmail();
 
         // WHEN
-        MandrillMessage message = MandrillProvider.toMandrillMessage(user, email);
+        MandrillMessage message = MandrillProvider.toMandrillMessage(email);
 
         // THEN
         // Sender
-        assertEquals(user.getAddress(), message.getFromEmail());
-        assertEquals(user.getName(), message.getFromName());
+        assertEquals(email.getSender().getAddress(), message.getFromEmail());
+        assertEquals(email.getSender().getName(), message.getFromName());
 
         // Recipients
         List<Recipient> tos = message.getTo();
         Recipient to = tos.get(0);
         assertEquals(1, tos.size());
-        assertEquals(email.getToName(), to.getName());
-        assertEquals(email.getToAddress(), to.getEmail());
+        assertEquals(email.getRecipient().getName(), to.getName());
+        assertEquals(email.getRecipient().getAddress(), to.getEmail());
         assertEquals(Recipient.Type.TO, to.getType());
 
         // Body

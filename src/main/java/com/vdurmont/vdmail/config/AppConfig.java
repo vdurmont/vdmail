@@ -11,5 +11,8 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:vdmail.properties")
 @Import(DatabaseConfig.class)
-@ComponentScan(basePackages = "com.vdurmont.vdmail.service")
+@ComponentScan(basePackages = {
+        "com.vdurmont.vdmail.mapper",
+        "com.vdurmont.vdmail.service"
+})
 public class AppConfig {}
