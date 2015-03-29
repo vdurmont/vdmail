@@ -13,7 +13,6 @@ import javax.inject.Inject;
  * Configuration class for the App.
  */
 @Configuration
-@PropertySource("classpath:vdmail.properties")
 @Import(DatabaseConfig.class)
 @ComponentScan(basePackages = {
         "com.vdurmont.vdmail.exception",

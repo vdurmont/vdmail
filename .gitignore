@@ -12,4 +12,4 @@
 target
 
 
-src/main/resources/vdmail.properties
+.env
