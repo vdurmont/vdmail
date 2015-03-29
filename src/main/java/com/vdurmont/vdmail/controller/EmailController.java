@@ -5,9 +5,10 @@ import com.vdurmont.vdmail.dto.UserDTO;
 import com.vdurmont.vdmail.mapper.EmailMapper;
 import com.vdurmont.vdmail.model.Email;
 import com.vdurmont.vdmail.model.User;
-import com.vdurmont.vdmail.service.LoginService;
 import com.vdurmont.vdmail.service.EmailService;
+import com.vdurmont.vdmail.service.LoginService;
 import com.vdurmont.vdmail.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,8 @@ import javax.inject.Inject;
 @Controller
 @RequestMapping("emails")
 public class EmailController {
+    private static final Logger LOGGER = Logger.getLogger(EmailController.class);
+
     @Inject private EmailMapper emailMapper;
     @Inject private EmailService emailService;
     @Inject private LoginService loginService;
@@ -30,6 +33,7 @@ public class EmailController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public EmailDTO sendEmail(@RequestBody EmailDTO dto) {
+        LOGGER.trace("Sending email=" + dto);
         User user = this.loginService.getRequiredCurrentUser();
         User recipient = null;
         UserDTO recipientDTO = dto.getRecipient();

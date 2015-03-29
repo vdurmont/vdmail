@@ -19,4 +19,11 @@ public class UserDTO extends EntityDTO {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Override public String toString() {
+        return "UserDTO{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }
