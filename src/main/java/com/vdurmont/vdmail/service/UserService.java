@@ -1,11 +1,14 @@
 package com.vdurmont.vdmail.service;
 
+import com.vdurmont.vdmail.exception.AlreadyDoneException;
+import com.vdurmont.vdmail.exception.IllegalInputException;
 import com.vdurmont.vdmail.exception.NotFoundException;
 import com.vdurmont.vdmail.model.User;
 import com.vdurmont.vdmail.repository.EmailRepository;
 import com.vdurmont.vdmail.repository.UserRepository;
 import com.vdurmont.vdmail.tools.Emails;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -14,9 +17,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import static com.vdurmont.vdmail.tools.Strings.isNullOrEmpty;
+
 @Service
 public class UserService {
     @Inject private EmailRepository emailRepository;
+    @Inject private PasswordEncoder passwordEncoder;
     @Inject private UserRepository userRepository;
 
     public User getOrCreate(String address) {
@@ -56,6 +62,36 @@ public class UserService {
         User user = this.userRepository.findOne(userId);
         if (user == null) {
             throw new NotFoundException("The User#" + userId + " was not found.");
+        }
+        return user;
+    }
+
+    public User create(String name, String address, String password) {
+        if (isNullOrEmpty(name)) {
+            throw new IllegalInputException("Invalid input: name");
+        }
+        if (isNullOrEmpty(password)) {
+            throw new IllegalInputException("Invalid input: password");
+        }
+        address = Emails.clean(address);
+        String encoded = this.passwordEncoder.encode(password);
+        User user = this.userRepository.findByAddress(address);
+        if (user != null && user.getName() != null) {
+            throw new AlreadyDoneException("The email address '" + address + "' is already taken!");
+        } else if (user == null) {
+            user = new User();
+            user.setAddress(address);
+        }
+        user.setName(name);
+        user.setPassword(encoded);
+        return this.userRepository.save(user);
+    }
+
+    public User getByAddress(String address) {
+        address = Emails.clean(address);
+        User user = this.userRepository.findByAddress(address);
+        if (user == null) {
+            throw new NotFoundException("The User with address '" + address + "' was not found.");
         }
         return user;
     }

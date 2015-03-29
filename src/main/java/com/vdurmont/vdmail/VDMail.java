@@ -1,6 +1,7 @@
 package com.vdurmont.vdmail;
 
 import com.vdurmont.vdmail.config.WebConfig;
+import com.vdurmont.vdmail.filter.TokenFilter;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -29,13 +30,18 @@ public class VDMail {
 
         ServletHolder servletHolder = new ServletHolder("vdmail", new DispatcherServlet(applicationContext));
 
-        ServletContextHandler servletContext = new ServletContextHandler(null, "/");
+        ServletContextHandler servletContext = new ServletContextHandler(null, "/", true, false);
         servletContext.addEventListener(new ContextLoaderListener(applicationContext));
         servletContext.addServlet(servletHolder, "/*");
 
         LOGGER.info("Registering Spring MVC Servlet");
         FilterHolder filterHolder = new FilterHolder(DelegatingFilterProxy.class);
         filterHolder.setName("springSecurityFilterChain");
+        servletContext.addFilter(filterHolder, "/*", EnumSet.allOf(DispatcherType.class));
+
+        LOGGER.info("Registering Token Filter");
+        filterHolder = new FilterHolder(TokenFilter.class);
+        filterHolder.setName("tokenFiler");
         servletContext.addFilter(filterHolder, "/*", EnumSet.allOf(DispatcherType.class));
 
         // Server

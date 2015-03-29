@@ -66,11 +66,7 @@ public class EmailService {
      */
     public Email send(User sender, User recipient, String subject, String content) {
         // Build the email
-        Email email = new Email();
-        email.setSender(sender);
-        email.setRecipient(recipient);
-        email.setSubject(subject);
-        email.setContent(content);
+        Email email = this.generateEmail(sender, recipient, subject, content);
 
         // Check that it's valid
         List<String> errors = Emails.validate(email);
@@ -110,5 +106,18 @@ public class EmailService {
             // TODO maybe we could try to start again at the begining of the list?
             throw new VDMailException(HttpStatus.INTERNAL_SERVER_ERROR, "No mail provider available.");
         }
+    }
+
+    private Email generateEmail(User sender, User recipient, String subject, String content) {
+        Email email = new Email();
+        email.setSender(sender);
+        email.setRecipient(recipient);
+        email.setSubject(subject);
+        email.setContent(content);
+        return email;
+    }
+
+    public Email create(User sender, User recipient, String subject, String content) {
+        return this.emailRepository.save(this.generateEmail(sender, recipient, subject, content));
     }
 }

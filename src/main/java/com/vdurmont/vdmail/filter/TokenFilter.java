@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -24,13 +26,12 @@ import java.util.Collection;
 
 public class TokenFilter implements Filter {
     private static final Logger LOGGER = Logger.getLogger(TokenFilter.class);
-    private final SessionService sessionService;
+    private SessionService sessionService;
 
-    public TokenFilter(SessionService sessionService) {
-        this.sessionService = sessionService;
+    @Override public void init(FilterConfig filterConfig) throws ServletException {
+        WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(filterConfig.getServletContext());
+        this.sessionService = context.getBean(SessionService.class);
     }
-
-    @Override public void init(FilterConfig filterConfig) throws ServletException {}
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

@@ -4,6 +4,7 @@ import com.vdurmont.vdmail.exception.ForbiddenException;
 import com.vdurmont.vdmail.exception.NoConnectedUserException;
 import com.vdurmont.vdmail.filter.TokenFilter;
 import com.vdurmont.vdmail.model.User;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Service;
 public class LoginService {
     public User getCurrentUser() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        TokenFilter.VDMailAuthentication auth = (TokenFilter.VDMailAuthentication) securityContext.getAuthentication();
-        if (auth == null || auth.getPrincipal() instanceof String) {
+        Authentication auth = securityContext.getAuthentication();
+        if (auth == null || !(auth instanceof TokenFilter.VDMailAuthentication)) {
             return null;
         } else {
             return (User) auth.getPrincipal();
