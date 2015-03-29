@@ -4,15 +4,19 @@ import com.vdurmont.vdmail.AbstractSpringTest;
 import com.vdurmont.vdmail.exception.IllegalInputException;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.model.Email;
+import com.vdurmont.vdmail.model.User;
 import com.vdurmont.vdmail.service.mailprovider.ConsoleMailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MandrillProvider;
 import com.vdurmont.vdmail.service.mailprovider.SendgridProvider;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import javax.inject.Inject;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -77,5 +81,26 @@ public class EmailServiceTest extends AbstractSpringTest {
         verify(this.mandrillProvider).send(any(Email.class));
         verify(this.sendgridProvider).send(any(Email.class));
         verify(this.consoleMailProvider, never()).send(any(Email.class));
+    }
+
+    @Test public void send_creates_an_email() {
+        // GIVEN
+        User sender = this.createUser();
+        User recipient = this.createUser();
+        String subject = randomString();
+        String content = randomString();
+
+        DateTime now = setCurrentDateNow();
+
+        // WHEN
+        Email email = this.emailService.send(sender, recipient, subject, content);
+
+        // THEN
+        assertNotNull(email.getId());
+        assertEquals(now, email.getCreatedDate());
+        assertEquals(subject, email.getSubject());
+        assertEquals(content, email.getContent());
+        assertEntityEquals(sender, email.getSender());
+        assertEntityEquals(recipient, email.getRecipient());
     }
 }

@@ -19,12 +19,12 @@ public abstract class AbstractSpringTest extends AbstractTest {
     @Inject private EmailRepository emailRepository;
     @Inject private UserRepository userRepository;
 
-    @Before public void setup() {
+    @Before public void setUpSpringTest() {
         MockitoAnnotations.initMocks(this);
     }
 
     @After
-    public void tearDown() {
+    public void tearDownSpringTest() {
         this.emailRepository.deleteAll();
         this.userRepository.deleteAll();
     }
