@@ -7,6 +7,7 @@ import com.vdurmont.vdmail.service.LoginService;
 import com.vdurmont.vdmail.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +22,13 @@ public class UserController {
     @Inject private LoginService loginService;
     @Inject private UserMapper userMapper;
     @Inject private UserService userService;
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    @ResponseBody
+    public UserDTO createUser(@RequestBody UserDTO dto) {
+        User user = this.userService.create(dto.getName(), dto.getAddress(), dto.getPassword());
+        return this.userMapper.generate(user);
+    }
 
     @RequestMapping(value = "{userId}", method = RequestMethod.GET)
     @ResponseBody

@@ -66,8 +66,7 @@ The Session object:
 Issue a basic authenticated POST request on `/sessions`.
 
 ```
-curl  -H "Content-Type: application/json" \
-      -u <EMAIL_ADDRESS>:<PASSWORD>
+curl  -u <EMAIL_ADDRESS>:<PASSWORD> \
       -X POST \
       http://vdmail.herokuapp.com/sessions
 ```
@@ -106,7 +105,7 @@ You have to provide the following properties:
 
 ```
 curl  -H "Content-Type: application/json" \
-      -d "{ \"name\": \"Clark Kent\", \"email\": \"superman@vdmail.vdurmont.com\", \"password\": \"my_password\" }" \
+      -d "{ \"name\": \"Clark Kent\", \"address\": \"superman@vdmail.vdurmont.com\", \"password\": \"my_password\" }" \
       http://vdmail.herokuapp.com/users
 ```
 

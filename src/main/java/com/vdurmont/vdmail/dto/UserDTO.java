@@ -3,6 +3,7 @@ package com.vdurmont.vdmail.dto;
 public class UserDTO extends EntityDTO {
     private String name;
     private String address;
+    private String password;
 
     public String getName() {
         return name;
@@ -18,6 +19,14 @@ public class UserDTO extends EntityDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override public String toString() {
