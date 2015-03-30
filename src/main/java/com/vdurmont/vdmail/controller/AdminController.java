@@ -3,6 +3,7 @@ package com.vdurmont.vdmail.controller;
 import com.vdurmont.vdmail.exception.IllegalInputException;
 import com.vdurmont.vdmail.repository.EmailRepository;
 import com.vdurmont.vdmail.repository.UserRepository;
+import com.vdurmont.vdmail.service.EmailService;
 import com.vdurmont.vdmail.service.mailprovider.MailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MandrillProvider;
 import com.vdurmont.vdmail.service.mailprovider.SendgridProvider;
@@ -24,6 +25,8 @@ import java.util.Map;
 public class AdminController {
     @Inject private EmailRepository emailRepository;
     @Inject private UserRepository userRepository;
+
+    @Inject private EmailService emailService;
 
     @Inject private MandrillProvider mandrillProvider;
     @Inject private SendgridProvider sendgridProvider;
@@ -56,24 +59,29 @@ public class AdminController {
     @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void activateProvider(@PathVariable String provider) {
-        this.getProvider(provider).setActive(true);
+        this.toggleProvider(provider, true);
     }
 
     @RequestMapping(value = "providers/{provider}", method = RequestMethod.DELETE)
     @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateProvider(@PathVariable String provider) {
-        this.getProvider(provider).setActive(false);
+        this.toggleProvider(provider, false);
     }
 
-    private MailProvider getProvider(String providerString) {
+    private void toggleProvider(String providerString, boolean active) {
+        MailProvider provider;
         switch (providerString.trim().toLowerCase()) {
             case "mandrill":
-                return this.mandrillProvider;
+                provider = this.mandrillProvider;
+                break;
             case "sendgrid":
-                return this.sendgridProvider;
+                provider = this.sendgridProvider;
+                break;
             default:
                 throw new IllegalInputException("Unknown provider: " + providerString);
         }
+        provider.setActive(active);
+        this.emailService.setUp(); // Refresh the available providers
     }
 }

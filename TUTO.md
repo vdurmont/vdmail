@@ -81,6 +81,7 @@ The email is sent! The response will look like:
     "address":"batman@vdmail.vdurmont.com"
   },
   "subject": "Hello from NYC",
-  "content":"Hi! How are you doing these days?"
+  "content": "Hi! How are you doing these days?",
+  "provider": "MANDRILL"
 }
 ```

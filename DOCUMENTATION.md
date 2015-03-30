@@ -143,7 +143,8 @@ The Email object:
   "sender": { ... }, // A User object
   "recipient": { ... }, // A User object
   "subject": "Hello from Gotham City",
-  "content": "Hi! How are you doing these days?"
+  "content": "Hi! How are you doing these days?",
+  "provider": "MANDRILL" // The provider used to send the email: MANDRILL, SENDGRID, CONSOLE (debug only)
 }
 ```
 
