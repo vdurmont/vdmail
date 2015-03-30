@@ -69,4 +69,16 @@ public class SessionService {
 
         return session;
     }
+
+    public Session getById(int sessionId) {
+        Session session = this.sessionRepository.findOne(sessionId);
+        if (session == null) {
+            throw new NotFoundException("The Session#" + sessionId + " cannot be found.");
+        }
+        return session;
+    }
+
+    public void delete(Session session) {
+        this.sessionRepository.delete(session);
+    }
 }

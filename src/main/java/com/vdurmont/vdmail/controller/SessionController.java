@@ -3,11 +3,13 @@ package com.vdurmont.vdmail.controller;
 import com.vdurmont.vdmail.dto.SessionDTO;
 import com.vdurmont.vdmail.mapper.SessionMapper;
 import com.vdurmont.vdmail.model.Session;
+import com.vdurmont.vdmail.service.LoginService;
 import com.vdurmont.vdmail.service.SessionService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("sessions")
 public class SessionController {
+    @Inject private LoginService loginService;
     @Inject private SessionMapper sessionMapper;
     @Inject private SessionService sessionService;
 
@@ -40,5 +43,14 @@ public class SessionController {
 
         Session session = this.sessionService.create(email, password);
         return this.sessionMapper.generate(session);
+    }
+
+    @RequestMapping(value = "{sessionId}", method = RequestMethod.DELETE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int sessionId) {
+        Session session = this.sessionService.getById(sessionId);
+        this.loginService.assertHasRightOn(session.getUser());
+        this.sessionService.delete(session);
     }
 }
