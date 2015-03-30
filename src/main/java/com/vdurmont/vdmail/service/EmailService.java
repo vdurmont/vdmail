@@ -12,7 +12,6 @@ import com.vdurmont.vdmail.service.mailprovider.MailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MandrillProvider;
 import com.vdurmont.vdmail.service.mailprovider.SendgridProvider;
 import com.vdurmont.vdmail.tools.Emails;
-import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +31,6 @@ public class EmailService {
     @Inject private SendgridProvider sendgridProvider;
 
     private List<MailProvider> providers;
-    private int providerIndex;
-    private DateTime nextReset;
 
     /**
      * The setup populates the list of available providers according to the configuration of the app.
@@ -41,13 +38,12 @@ public class EmailService {
     @PostConstruct
     public void setUp() {
         this.providers = new ArrayList<>();
-        this.providerIndex = 0;
 
-        if (this.mandrillProvider.isEnabled()) {
+        if (this.mandrillProvider.getStatus() == MailProvider.ProviderStatus.ACTIVE) {
             this.providers.add(this.mandrillProvider);
         }
 
-        if (this.sendgridProvider.isEnabled()) {
+        if (this.sendgridProvider.getStatus() == MailProvider.ProviderStatus.ACTIVE) {
             this.providers.add(this.sendgridProvider);
         }
 
@@ -74,12 +70,6 @@ public class EmailService {
             throw new IllegalInputException("Invalid email (invalid fields: " + errors + ")");
         }
 
-        // Reset the providers if needed
-        if (this.nextReset != null && DateTime.now().isAfter(this.nextReset)) {
-            this.nextReset = null;
-            this.providerIndex = 0;
-        }
-
         this.doSendEmail(email);
 
         return this.emailRepository.save(email);
@@ -87,23 +77,20 @@ public class EmailService {
 
     private void doSendEmail(Email email) {
         boolean sent = false;
-        while (!sent && this.providerIndex < this.providers.size()) {
+        int providerIndex = 0;
+        while (!sent && providerIndex < this.providers.size()) {
             try {
-                MailProvider provider = this.providers.get(this.providerIndex);
+                MailProvider provider = this.providers.get(providerIndex);
                 provider.send(email);
                 sent = true;
             } catch (UnavailableProviderException e) {
-                // If the provider failed to send the message, we skip it for the next few minutes
-                // TODO implement a real throttling where the delay increases at each failure
-                // TODO set the reset date for each provider
-                this.providerIndex++;
-                this.nextReset = DateTime.now().plus(DELAY);
+                // TODO implement a throttling to skip the provider for a few minutes if it failed
+                providerIndex++;
             }
         }
 
         if (!sent) {
             // We didn't find any available provider
-            // TODO maybe we could try to start again at the begining of the list?
             throw new VDMailException(HttpStatus.INTERNAL_SERVER_ERROR, "No mail provider available.");
         }
     }

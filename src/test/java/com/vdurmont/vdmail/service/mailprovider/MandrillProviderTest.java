@@ -25,17 +25,17 @@ public class MandrillProviderTest extends AbstractSpringTest {
         // Null apiKey
         when(this.env.getProperty(MandrillProvider.ENV_API_KEY)).thenReturn(null);
         this.mandrillProvider.setUp();
-        assertFalse(this.mandrillProvider.isEnabled());
+        assertFalse(this.mandrillProvider.isConfigured());
 
         // Empty apiKey
         when(this.env.getProperty(MandrillProvider.ENV_API_KEY)).thenReturn("");
         this.mandrillProvider.setUp();
-        assertFalse(this.mandrillProvider.isEnabled());
+        assertFalse(this.mandrillProvider.isConfigured());
 
         // Provided apiKey
         when(this.env.getProperty(MandrillProvider.ENV_API_KEY)).thenReturn(randomString());
         this.mandrillProvider.setUp();
-        assertTrue(this.mandrillProvider.isEnabled());
+        assertTrue(this.mandrillProvider.isConfigured());
     }
 
     @Test public void toMandrillMessage_converts_the_email() {

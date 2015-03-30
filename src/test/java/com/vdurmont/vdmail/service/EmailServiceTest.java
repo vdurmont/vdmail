@@ -6,6 +6,7 @@ import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.model.Email;
 import com.vdurmont.vdmail.model.User;
 import com.vdurmont.vdmail.service.mailprovider.ConsoleMailProvider;
+import com.vdurmont.vdmail.service.mailprovider.MailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MandrillProvider;
 import com.vdurmont.vdmail.service.mailprovider.SendgridProvider;
 import org.joda.time.DateTime;
@@ -42,8 +43,8 @@ public class EmailServiceTest extends AbstractSpringTest {
 
     @Test public void if_no_provider_is_available_we_use_the_ConsoleMailProvider() throws UnavailableProviderException {
         // GIVEN
-        when(this.mandrillProvider.isEnabled()).thenReturn(false);
-        when(this.sendgridProvider.isEnabled()).thenReturn(false);
+        when(this.mandrillProvider.getStatus()).thenReturn(MailProvider.ProviderStatus.INACTIVE);
+        when(this.sendgridProvider.getStatus()).thenReturn(MailProvider.ProviderStatus.INACTIVE);
         this.emailService.setUp();
 
         // WHEN
@@ -55,8 +56,8 @@ public class EmailServiceTest extends AbstractSpringTest {
 
     @Test public void if_a_provider_is_available_we_use_it() throws UnavailableProviderException {
         // GIVEN
-        when(this.mandrillProvider.isEnabled()).thenReturn(true);
-        when(this.sendgridProvider.isEnabled()).thenReturn(false);
+        when(this.mandrillProvider.getStatus()).thenReturn(MailProvider.ProviderStatus.ACTIVE);
+        when(this.sendgridProvider.getStatus()).thenReturn(MailProvider.ProviderStatus.INACTIVE);
         this.emailService.setUp();
 
         // WHEN
@@ -69,9 +70,9 @@ public class EmailServiceTest extends AbstractSpringTest {
 
     @Test public void if_mandrill_is_unavailable_we_fallback_on_sendgrid() throws UnavailableProviderException {
         // GIVEN
-        when(this.mandrillProvider.isEnabled()).thenReturn(true);
+        when(this.mandrillProvider.getStatus()).thenReturn(MailProvider.ProviderStatus.ACTIVE);
         doThrow(UnavailableProviderException.class).when(this.mandrillProvider).send(any(Email.class));
-        when(this.sendgridProvider.isEnabled()).thenReturn(true);
+        when(this.sendgridProvider.getStatus()).thenReturn(MailProvider.ProviderStatus.ACTIVE);
         this.emailService.setUp();
 
         // WHEN

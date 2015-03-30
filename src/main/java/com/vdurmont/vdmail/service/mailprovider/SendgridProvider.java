@@ -14,15 +14,18 @@ import javax.inject.Inject;
 import static com.vdurmont.vdmail.tools.Strings.isNullOrEmpty;
 
 @Service
-public class SendgridProvider implements MailProvider {
+public class SendgridProvider extends AbstractProvider {
     private static final Logger LOGGER = Logger.getLogger(SendgridProvider.class);
 
     public static final String ENV_USERNAME = "sendgrid.username";
     public static final String ENV_PASSWORD = "sendgrid.password";
 
+    @Inject Environment env;
     private SendGrid sendGrid;
 
-    @Inject Environment env;
+    public SendgridProvider() {
+        super("Sendgrid");
+    }
 
     @PostConstruct
     public void setUp() {
@@ -33,12 +36,8 @@ public class SendgridProvider implements MailProvider {
         }
     }
 
-    @Override public void send(Email email) throws UnavailableProviderException {
-        if (this.sendGrid == null) {
-            throw new UnavailableProviderException("Sendgrid was not properly configured.");
-        }
+    @Override public void doSend(Email email) throws UnavailableProviderException {
         SendGrid.Email sendgridEmail = toSendgridEmail(email);
-
         try {
             SendGrid.Response response = sendGrid.send(sendgridEmail);
             if (!response.getStatus()) {
@@ -61,7 +60,7 @@ public class SendgridProvider implements MailProvider {
         return se;
     }
 
-    @Override public boolean isEnabled() {
+    @Override protected boolean isConfigured() {
         return this.sendGrid != null;
     }
 }

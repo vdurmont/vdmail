@@ -20,30 +20,30 @@ public class SendgridProviderTest extends AbstractSpringTest {
         when(this.env.getProperty(SendgridProvider.ENV_USERNAME)).thenReturn(null);
         when(this.env.getProperty(SendgridProvider.ENV_PASSWORD)).thenReturn(randomString());
         this.sendgridProvider.setUp();
-        assertFalse(this.sendgridProvider.isEnabled());
+        assertFalse(this.sendgridProvider.isConfigured());
 
         // Empty username
         when(this.env.getProperty(SendgridProvider.ENV_USERNAME)).thenReturn("");
         when(this.env.getProperty(SendgridProvider.ENV_PASSWORD)).thenReturn(randomString());
         this.sendgridProvider.setUp();
-        assertFalse(this.sendgridProvider.isEnabled());
+        assertFalse(this.sendgridProvider.isConfigured());
 
         // Null password
         when(this.env.getProperty(SendgridProvider.ENV_USERNAME)).thenReturn(randomString());
         when(this.env.getProperty(SendgridProvider.ENV_PASSWORD)).thenReturn(null);
         this.sendgridProvider.setUp();
-        assertFalse(this.sendgridProvider.isEnabled());
+        assertFalse(this.sendgridProvider.isConfigured());
 
         // Empty password
         when(this.env.getProperty(SendgridProvider.ENV_USERNAME)).thenReturn(randomString());
         when(this.env.getProperty(SendgridProvider.ENV_PASSWORD)).thenReturn("");
         this.sendgridProvider.setUp();
-        assertFalse(this.sendgridProvider.isEnabled());
+        assertFalse(this.sendgridProvider.isConfigured());
 
         // Everything is provided
         when(this.env.getProperty(SendgridProvider.ENV_USERNAME)).thenReturn(randomString());
         when(this.env.getProperty(SendgridProvider.ENV_PASSWORD)).thenReturn(randomString());
         this.sendgridProvider.setUp();
-        assertTrue(this.sendgridProvider.isEnabled());
+        assertTrue(this.sendgridProvider.isConfigured());
     }
 }

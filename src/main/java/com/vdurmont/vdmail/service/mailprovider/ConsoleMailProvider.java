@@ -13,7 +13,11 @@ public class ConsoleMailProvider implements MailProvider {
         LOGGER.debug("ConsoleMailService sending email=" + email);
     }
 
-    @Override public boolean isEnabled() {
-        return true;
+    @Override public ProviderStatus getStatus() {
+        return ProviderStatus.ACTIVE;
+    }
+
+    @Override public void setActive(boolean active) {
+        // No-op
     }
 }

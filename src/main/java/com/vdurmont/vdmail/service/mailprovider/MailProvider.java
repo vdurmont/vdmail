@@ -18,5 +18,27 @@ public interface MailProvider {
      *
      * @return false if disabled, true if enabled
      */
-    boolean isEnabled();
+    ProviderStatus getStatus();
+
+    /**
+     * Activates/deactivates a provider
+     */
+    void setActive(boolean active);
+
+    public static enum ProviderStatus {
+        /**
+         * The provider is active
+         */
+        ACTIVE,
+
+        /**
+         * The provider is inactive (has been deactivated by an admin)
+         */
+        INACTIVE,
+
+        /**
+         * The provider was not configured
+         */
+        NOT_CONFIGURED
+    }
 }

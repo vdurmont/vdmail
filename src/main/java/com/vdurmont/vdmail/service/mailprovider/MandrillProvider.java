@@ -19,12 +19,16 @@ import static com.microtripit.mandrillapp.lutung.view.MandrillMessage.Recipient;
 import static com.vdurmont.vdmail.tools.Strings.isNullOrEmpty;
 
 @Service
-public class MandrillProvider implements MailProvider {
+public class MandrillProvider extends AbstractProvider {
     private static final Logger LOGGER = Logger.getLogger(MandrillProvider.class);
     public static final String ENV_API_KEY = "mandrill.api_key";
 
     @Inject Environment env;
     private MandrillApi mandrillApi;
+
+    public MandrillProvider() {
+        super("Mandrill");
+    }
 
     @PostConstruct
     public void setUp() {
@@ -34,10 +38,7 @@ public class MandrillProvider implements MailProvider {
         }
     }
 
-    @Override public void send(Email email) throws UnavailableProviderException {
-        if (this.mandrillApi == null) {
-            throw new UnavailableProviderException("Mandrill was not properly configured.");
-        }
+    @Override protected void doSend(Email email) throws UnavailableProviderException {
         MandrillMessage message = toMandrillMessage(email);
         try {
             this.mandrillApi.messages().send(message, true);
@@ -67,7 +68,7 @@ public class MandrillProvider implements MailProvider {
         return recipient;
     }
 
-    @Override public boolean isEnabled() {
+    @Override protected boolean isConfigured() {
         return this.mandrillApi != null;
     }
 }
