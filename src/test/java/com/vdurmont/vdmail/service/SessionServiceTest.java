@@ -64,11 +64,11 @@ public class SessionServiceTest extends AbstractSpringTest {
         this.sessionService.create(user.getAddress(), pwd);
 
         // WHEN
-        Session session4 = this.sessionService.create(user.getAddress(), pwd);
+        Session session = this.sessionService.create(user.getAddress(), pwd);
 
         // THEN
         List<Session> sessions = this.sessionRepository.findAllByUser(user);
         assertEquals(1, sessions.size());
-        assertEntityEquals(session4, sessions.get(0));
+        assertEntityEquals(session, sessions.get(0));
     }
 }
