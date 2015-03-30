@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -113,5 +114,39 @@ public class EmailServiceTest extends AbstractSpringTest {
         assertEntityEquals(sender, email.getSender());
         assertEntityEquals(recipient, email.getRecipient());
         assertEquals(MailProviderType.CONSOLE, email.getProvider());
+    }
+
+    @Test public void getForUser_returns_the_emails_sent_by_this_user() {
+        // GIVEN
+        User user = this.createUser();
+        User other1 = this.createUser();
+        User other2 = this.createUser();
+        User other3 = this.createUser();
+
+        DateTime start = DateTime.now().minusDays(1);
+
+        setCurrentDate(start);
+        Email email1 = this.emailService.send(user, other1, randomString(), randomString());
+
+        setCurrentDate(start.plusHours(1));
+        this.emailService.send(other1, user, randomString(), randomString());
+
+        setCurrentDate(start.plusHours(2));
+        Email email2 = this.emailService.send(user, other2, randomString(), randomString());
+
+        setCurrentDate(start.plusHours(3));
+        Email email3 = this.emailService.send(user, other2, randomString(), randomString());
+
+        setCurrentDate(start.plusHours(4));
+        this.emailService.send(other3, other2, randomString(), randomString());
+
+        // WHEN
+        List<Email> emails = this.emailService.getForUser(user);
+
+        // THEN
+        assertEquals(3, emails.size());
+        assertEntityEquals(email3, emails.get(0));
+        assertEntityEquals(email2, emails.get(1));
+        assertEntityEquals(email1, emails.get(2));
     }
 }

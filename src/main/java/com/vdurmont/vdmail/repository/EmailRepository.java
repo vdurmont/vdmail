@@ -13,4 +13,6 @@ import java.util.List;
 public interface EmailRepository extends JpaRepository<Email, Integer> {
     @Query("SELECT e.recipient FROM Email e WHERE e.sender = ?1")
     List<User> findAllRecipientsBySender(User user, Sort sort);
+
+    List<Email> findAllBySender(User user, Sort sort);
 }

@@ -14,6 +14,7 @@ import com.vdurmont.vdmail.service.mailprovider.MandrillProvider;
 import com.vdurmont.vdmail.service.mailprovider.SendgridProvider;
 import com.vdurmont.vdmail.tools.Emails;
 import org.joda.time.Duration;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -110,5 +111,10 @@ public class EmailService {
         Email email = this.generateEmail(sender, recipient, subject, content);
         email.setProvider(provider);
         return this.emailRepository.save(email);
+    }
+
+    public List<Email> getForUser(User user) {
+        Sort sort = new Sort(Sort.Direction.DESC, "createdDate");
+        return this.emailRepository.findAllBySender(user, sort);
     }
 }

@@ -1,8 +1,12 @@
 package com.vdurmont.vdmail.controller;
 
+import com.vdurmont.vdmail.dto.EmailDTO;
 import com.vdurmont.vdmail.dto.UserDTO;
+import com.vdurmont.vdmail.mapper.EmailMapper;
 import com.vdurmont.vdmail.mapper.UserMapper;
+import com.vdurmont.vdmail.model.Email;
 import com.vdurmont.vdmail.model.User;
+import com.vdurmont.vdmail.service.EmailService;
 import com.vdurmont.vdmail.service.LoginService;
 import com.vdurmont.vdmail.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("users")
 public class UserController {
+    @Inject private EmailMapper emailMapper;
+    @Inject private EmailService emailService;
     @Inject private LoginService loginService;
     @Inject private UserMapper userMapper;
     @Inject private UserService userService;
@@ -46,6 +52,17 @@ public class UserController {
         List<User> contacts = this.userService.getContactsForUser(user);
         return contacts.stream()
                 .map(this.userMapper::generate)
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "{userId}/emails", method = RequestMethod.GET)
+    @ResponseBody
+    public List<EmailDTO> getEmails(@PathVariable int userId) {
+        User user = this.userService.getById(userId);
+        this.loginService.assertHasRightOn(user);
+        List<Email> emails = this.emailService.getForUser(user);
+        return emails.stream()
+                .map(this.emailMapper::generate)
                 .collect(Collectors.toList());
     }
 }
