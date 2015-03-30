@@ -2,10 +2,10 @@
 
 ## Introduction
 
-VDMail API is based in the REST architecture in order to keep a predictable behavior.
+VDMail API is based on the REST architecture in order to keep a predictable behavior.
 
 * We use the common HTTP verbs to perform actions on resources: GET, POST, PUT, DELETE, PATCH
-* JSON will be returned in all responses dfrom this API.
+* JSON will be returned in all responses.
 * HTTP status codes will indicate a success or the type of error that occurred.
 
 All dates are in ISO 8601 format (example: "2015-03-30T00:16:12.244Z").
@@ -121,7 +121,7 @@ curl  -H "Authorization: Token <YOUR_TOKEN>" \
 ### Get a user's contacts
 
 This method requires authentication.  
-The contacts are the previous recipients of this user (people who he sent email to).
+The contacts are the previous recipients of this user (people who he sent emails to).
 
 ```
 curl  -H "Authorization: Token <YOUR_TOKEN>" \
@@ -129,6 +129,17 @@ curl  -H "Authorization: Token <YOUR_TOKEN>" \
 ```
 
 This request will return a list of Users ordered by last sent email.
+
+### Get a user's sent emails
+
+This method requires authentication.  
+
+```
+curl  -H "Authorization: Token <YOUR_TOKEN>" \
+      http://vdmail.herokuapp.com/users/<USER_ID>/emails
+```
+
+This request will return a list of Emails ordered by created date desc.
 
 ## Emails
 
@@ -160,5 +171,5 @@ You have to provide the following properties:
 curl  -H "Authorization: Token <YOUR_TOKEN>" \
       -H "Content-Type: application/json" \
       -d "{ \"recipient\": { \"address\": \"superman@vdmail.vdurmont.com\" }, \"subject\": \"Hello from Gotham City\", \"content\": \"Hi! How are you doing these days?\" }" \
-      http://vdmail.herokuapp.com/users
+      http://vdmail.herokuapp.com/emails
 ```
