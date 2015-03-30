@@ -13,7 +13,6 @@ import com.vdurmont.vdmail.service.mailprovider.MailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MandrillProvider;
 import com.vdurmont.vdmail.service.mailprovider.SendgridProvider;
 import com.vdurmont.vdmail.tools.Emails;
-import org.joda.time.Duration;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +23,6 @@ import java.util.List;
 
 @Service
 public class EmailService {
-    private static final Duration DELAY = Duration.standardMinutes(1);
-
     @Inject private EmailRepository emailRepository;
 
     @Inject private ConsoleMailProvider consoleMailProvider;

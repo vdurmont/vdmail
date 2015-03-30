@@ -7,6 +7,7 @@ import com.vdurmont.vdmail.service.EmailService;
 import com.vdurmont.vdmail.service.mailprovider.MailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MandrillProvider;
 import com.vdurmont.vdmail.service.mailprovider.SendgridProvider;
+import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,10 +33,18 @@ public class AdminController {
     @Inject private MandrillProvider mandrillProvider;
     @Inject private SendgridProvider sendgridProvider;
 
+    private DateTime lastReboot;
+
+    @PostConstruct
+    public void setUp() {
+        this.lastReboot = DateTime.now();
+    }
+
     @RequestMapping(value = "status", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> getStatus() {
         Map<String, Object> map = new HashMap<>();
+        map.put("last_reboot_date", this.lastReboot);
         map.put("stats", this.generateStats());
         map.put("providers", this.generateProviders());
         return map;

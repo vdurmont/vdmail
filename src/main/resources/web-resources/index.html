@@ -3,8 +3,48 @@
 <html lang="en-us">
 <head>
     <script src="/static/js/test.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <style>
+        pre {
+            outline: 1px solid #ccc;
+            padding: 5px;
+            margin: 5px;
+        }
+
+        .code-string {
+            color: green;
+        }
+
+        .code-number {
+            color: darkorange;
+        }
+
+        .code-boolean {
+            color: blue;
+        }
+
+        .code-null {
+            color: magenta;
+        }
+
+        .code-key {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-Hey there!
+<div class="container">
+    <h1>VDMail</h1>
+
+    <p>Demo project: webservice that provides an abstraction between mail providers.</p>
+
+    <p>Check out the project on <a href="https://github.com/vdurmont/vdmail">Github</a>.</p>
+
+    <h2>Current status</h2>
+
+    <div id="status"></div>
+
+    <button class="btn btn-default" onclick="loadStatus()">Reload</button>
+</div>
 </body>
 </html>

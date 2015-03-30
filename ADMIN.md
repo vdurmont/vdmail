@@ -12,6 +12,7 @@ The response is like this:
 
 ```
 {
+  "last_reboot_date": "2015-03-30T00:16:12.244Z",
   "stats": {
     "num_users": 3, // The number of users (when we send an email to someone, a user is created)
     "num_active_users": 3, // The number of active users (users who actually signed up)
