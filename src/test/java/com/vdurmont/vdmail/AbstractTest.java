@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -28,6 +29,12 @@ public abstract class AbstractTest {
 
     protected static String randomEmail() {
         return randomString() + "@vdmail.vdurmont.com";
+    }
+
+    protected static <T extends Enum> T randomEnum(Class<T> cls) {
+        Random r = new Random();
+        int index = r.nextInt(cls.getEnumConstants().length);
+        return cls.getEnumConstants()[index];
     }
 
     protected static Email generateValidEmail() {

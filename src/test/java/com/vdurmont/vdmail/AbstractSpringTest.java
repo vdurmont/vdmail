@@ -3,6 +3,7 @@ package com.vdurmont.vdmail;
 import com.vdurmont.vdmail.config.AppConfig;
 import com.vdurmont.vdmail.config.SecurityConfig;
 import com.vdurmont.vdmail.model.Email;
+import com.vdurmont.vdmail.model.MailProviderType;
 import com.vdurmont.vdmail.model.User;
 import com.vdurmont.vdmail.repository.EmailRepository;
 import com.vdurmont.vdmail.repository.SessionRepository;
@@ -52,6 +53,7 @@ public abstract class AbstractSpringTest extends AbstractTest {
         email.setRecipient(recipient);
         email.setSubject(randomString());
         email.setContent(randomString());
+        email.setProvider(randomEnum(MailProviderType.class));
         return this.emailRepository.save(email);
     }
 }

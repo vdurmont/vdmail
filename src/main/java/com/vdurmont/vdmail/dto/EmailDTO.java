@@ -1,10 +1,13 @@
 package com.vdurmont.vdmail.dto;
 
+import com.vdurmont.vdmail.model.MailProviderType;
+
 public class EmailDTO extends EntityDTO {
     private UserDTO sender;
     private UserDTO recipient;
     private String subject;
     private String content;
+    private MailProviderType provider;
 
     public UserDTO getSender() {
         return sender;
@@ -38,12 +41,21 @@ public class EmailDTO extends EntityDTO {
         this.content = content;
     }
 
+    public MailProviderType getProvider() {
+        return provider;
+    }
+
+    public void setProvider(MailProviderType provider) {
+        this.provider = provider;
+    }
+
     @Override public String toString() {
         return "EmailDTO{" +
                 "sender=" + sender +
                 ", recipient=" + recipient +
                 ", subject='" + subject + '\'' +
                 ", content='" + content + '\'' +
+                ", provider=" + provider +
                 '}';
     }
 }

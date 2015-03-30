@@ -4,6 +4,7 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.model.Email;
+import com.vdurmont.vdmail.model.MailProviderType;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class SendgridProvider extends AbstractProvider {
     private SendGrid sendGrid;
 
     public SendgridProvider() {
-        super("Sendgrid");
+        super(MailProviderType.SENDGRID);
     }
 
     @PostConstruct

@@ -4,12 +4,14 @@ import com.vdurmont.vdmail.AbstractSpringTest;
 import com.vdurmont.vdmail.exception.IllegalInputException;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.model.Email;
+import com.vdurmont.vdmail.model.MailProviderType;
 import com.vdurmont.vdmail.model.User;
 import com.vdurmont.vdmail.service.mailprovider.ConsoleMailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MailProvider;
 import com.vdurmont.vdmail.service.mailprovider.MandrillProvider;
 import com.vdurmont.vdmail.service.mailprovider.SendgridProvider;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,6 +32,13 @@ public class EmailServiceTest extends AbstractSpringTest {
     @Mock private ConsoleMailProvider consoleMailProvider;
     @Mock private MandrillProvider mandrillProvider;
     @Mock private SendgridProvider sendgridProvider;
+
+    @Before
+    public void setUp() {
+        when(this.consoleMailProvider.getType()).thenReturn(MailProviderType.CONSOLE);
+        when(this.mandrillProvider.getType()).thenReturn(MailProviderType.MANDRILL);
+        when(this.sendgridProvider.getType()).thenReturn(MailProviderType.SENDGRID);
+    }
 
     @Test public void send_with_invalid_sender_fails() {
         // GIVEN
@@ -103,5 +112,6 @@ public class EmailServiceTest extends AbstractSpringTest {
         assertEquals(content, email.getContent());
         assertEntityEquals(sender, email.getSender());
         assertEntityEquals(recipient, email.getRecipient());
+        assertEquals(MailProviderType.CONSOLE, email.getProvider());
     }
 }

@@ -5,6 +5,7 @@ import com.vdurmont.vdmail.exception.IllegalInputException;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.exception.VDMailException;
 import com.vdurmont.vdmail.model.Email;
+import com.vdurmont.vdmail.model.MailProviderType;
 import com.vdurmont.vdmail.model.User;
 import com.vdurmont.vdmail.repository.EmailRepository;
 import com.vdurmont.vdmail.service.mailprovider.ConsoleMailProvider;
@@ -83,6 +84,7 @@ public class EmailService {
                 MailProvider provider = this.providers.get(providerIndex);
                 provider.send(email);
                 sent = true;
+                email.setProvider(provider.getType());
             } catch (UnavailableProviderException e) {
                 // TODO implement a throttling to skip the provider for a few minutes if it failed
                 providerIndex++;
@@ -104,7 +106,9 @@ public class EmailService {
         return email;
     }
 
-    public Email create(User sender, User recipient, String subject, String content) {
-        return this.emailRepository.save(this.generateEmail(sender, recipient, subject, content));
+    public Email create(User sender, User recipient, String subject, String content, MailProviderType provider) {
+        Email email = this.generateEmail(sender, recipient, subject, content);
+        email.setProvider(provider);
+        return this.emailRepository.save(email);
     }
 }

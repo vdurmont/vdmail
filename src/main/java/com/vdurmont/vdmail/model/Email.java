@@ -1,7 +1,6 @@
 package com.vdurmont.vdmail.model;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Column;
@@ -27,7 +26,10 @@ public class Email extends Entity {
     @NotEmpty
     @Column(name = "content", nullable = false, length = 1000)
     private String content;
-//    private MailProviderType sentWith; TODO register the sender type
+    @NotNull
+    @Type(type = "com.vdurmont.vdmail.model.hibernate.MailProviderTypeHibernateUserType")
+    @Column(nullable = false)
+    private MailProviderType provider;
 
     public User getSender() {
         return sender;
@@ -59,5 +61,13 @@ public class Email extends Entity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public MailProviderType getProvider() {
+        return provider;
+    }
+
+    public void setProvider(MailProviderType provider) {
+        this.provider = provider;
     }
 }

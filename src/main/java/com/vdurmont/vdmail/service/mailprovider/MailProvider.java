@@ -2,6 +2,7 @@ package com.vdurmont.vdmail.service.mailprovider;
 
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.model.Email;
+import com.vdurmont.vdmail.model.MailProviderType;
 
 public interface MailProvider {
     /**
@@ -24,6 +25,11 @@ public interface MailProvider {
      * Activates/deactivates a provider
      */
     void setActive(boolean active);
+
+    /**
+     * Returns the type of the provider
+     */
+    MailProviderType getType();
 
     public static enum ProviderStatus {
         /**

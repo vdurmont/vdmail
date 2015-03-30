@@ -17,6 +17,7 @@ public class EmailMapper {
         dto.setCreatedDate(email.getCreatedDate());
         dto.setSubject(email.getSubject());
         dto.setContent(email.getContent());
+        dto.setProvider(email.getProvider());
 
         UserDTO sender = this.userMapper.generate(email.getSender());
         dto.setSender(sender);

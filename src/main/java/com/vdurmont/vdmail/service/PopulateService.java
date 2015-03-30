@@ -1,5 +1,6 @@
 package com.vdurmont.vdmail.service;
 
+import com.vdurmont.vdmail.model.MailProviderType;
 import com.vdurmont.vdmail.model.Session;
 import com.vdurmont.vdmail.model.User;
 import com.vdurmont.vdmail.repository.SessionRepository;
@@ -39,10 +40,10 @@ public class PopulateService {
             User spiderman = this.userService.create("Peter Parker", "spiderman@vdmail.vdurmont.com", "spiderman");
 
             // Send some emails
-            this.emailService.create(superman, batman, "Hi from Gotham City", "Hey dude! How's it going? Cheers.");
-            this.emailService.create(batman, superman, "Re: Hi from Gotham City", "Everything's all right. Catching bad guys.");
-            this.emailService.create(spiderman, batman, "Hi from NYC", "Hey! I have a huge villain who looks like an octopus. Little help please!");
-            this.emailService.create(batman, spiderman, "Re: Hi from NYC", "Sorry, I have my hands full with some kind of clown right know :(");
+            this.emailService.create(superman, batman, "Hi from Gotham City", "Hey dude! How's it going? Cheers.", MailProviderType.MANDRILL);
+            this.emailService.create(batman, superman, "Re: Hi from Gotham City", "Everything's all right. Catching bad guys.", MailProviderType.MANDRILL);
+            this.emailService.create(spiderman, batman, "Hi from NYC", "Hey! I have a huge villain who looks like an octopus. Little help please!", MailProviderType.SENDGRID);
+            this.emailService.create(batman, spiderman, "Re: Hi from NYC", "Sorry, I have my hands full with some kind of clown right know :(", MailProviderType.SENDGRID);
 
             // Init a session
             Session session = new Session();

@@ -2,6 +2,7 @@ package com.vdurmont.vdmail.service.mailprovider;
 
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.model.Email;
+import com.vdurmont.vdmail.model.MailProviderType;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +20,9 @@ public class ConsoleMailProvider implements MailProvider {
 
     @Override public void setActive(boolean active) {
         // No-op
+    }
+
+    @Override public MailProviderType getType() {
+        return MailProviderType.CONSOLE;
     }
 }

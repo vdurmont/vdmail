@@ -5,6 +5,7 @@ import com.microtripit.mandrillapp.lutung.model.MandrillApiError;
 import com.microtripit.mandrillapp.lutung.view.MandrillMessage;
 import com.vdurmont.vdmail.exception.UnavailableProviderException;
 import com.vdurmont.vdmail.model.Email;
+import com.vdurmont.vdmail.model.MailProviderType;
 import com.vdurmont.vdmail.model.User;
 import org.apache.log4j.Logger;
 import org.springframework.core.env.Environment;
@@ -27,7 +28,7 @@ public class MandrillProvider extends AbstractProvider {
     private MandrillApi mandrillApi;
 
     public MandrillProvider() {
-        super("Mandrill");
+        super(MailProviderType.MANDRILL);
     }
 
     @PostConstruct
