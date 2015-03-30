@@ -41,11 +41,11 @@ public class EmailService {
     public void setUp() {
         this.providers = new ArrayList<>();
 
-        if (this.mandrillProvider.getStatus() == MailProvider.ProviderStatus.ACTIVE) {
+        if (this.mandrillProvider.getStatus() != MailProvider.ProviderStatus.NOT_CONFIGURED) {
             this.providers.add(this.mandrillProvider);
         }
 
-        if (this.sendgridProvider.getStatus() == MailProvider.ProviderStatus.ACTIVE) {
+        if (this.sendgridProvider.getStatus() != MailProvider.ProviderStatus.NOT_CONFIGURED) {
             this.providers.add(this.sendgridProvider);
         }
 
